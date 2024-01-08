@@ -1,36 +1,28 @@
-import client from "../src/applications/database";
+import { ProductRepository } from "../src/repositories/product.repository";
 import { Product } from "../src/entities/Product";
+
+const productRepository = new ProductRepository();
 
 export const mockProduct = { name: "mock", price: 10000, stock: 99 };
 
 export const deleteTestProduct = async (id: number) => {
-  const result = await client.products.delete({
-    where: {
-      id: id,
-    },
-  });
+  const result = await productRepository.delete(id);
 
   return result;
 };
 
 export const createTestProduct = async () => {
   const { name, price, stock } = mockProduct;
-  const product = await client.products.create({
-    data: {
-      name,
-      price,
-      stock,
-    },
+  const product = await productRepository.create({
+    name,
+    price,
+    stock,
   });
   return product;
 };
 
 export const getTestProduct = async (id: number): Promise<Product> => {
-  const product = await client.products.findUnique({
-    where: {
-      id,
-    },
-  });
+  const product = await productRepository.findOne(id);
 
   if (!product) throw new Error("Product not found");
 
