@@ -7,7 +7,9 @@
   "license": "MIT",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "test": "jest --i"
+    "test": "jest --i",
+    "db:migrate": "npx prisma migrate dev",
+    "db:migrate:preview": "npx prisma migrate dev --create-only"
   },
   "jest": {
     "transform": {
@@ -15,6 +17,7 @@
     }
   },
   "dependencies": {
+    "@prisma/client": "^5.7.1",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "pg": "^8.11.3"
@@ -29,6 +32,7 @@
     "@types/supertest": "^6.0.2",
     "babel-jest": "^29.7.0",
     "jest": "^29.7.0",
+    "prisma": "^5.7.1",
     "supertest": "^6.3.3",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3"

@@ -5,16 +5,19 @@ import {
   mockProduct,
 } from "./test-utils";
 import { getApp } from "../src/applications/app";
+import { Product } from "../src/entities/Product";
 
 const app = getApp();
 
 describe("POST /api/products", () => {
+  let product: Product;
+
   beforeEach(async () => {
-    await createTestProduct();
+    product = await createTestProduct();
   });
 
   afterEach(async () => {
-    await deleteTestProduct();
+    await deleteTestProduct(product.id!);
   });
 
   it("should can create product", async () => {

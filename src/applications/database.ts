@@ -1,19 +1,15 @@
-import { Pool } from "pg";
-import dotenv from "dotenv";
+import { PrismaClient } from "@prisma/client";
 
-dotenv.config();
+let pool: PrismaClient;
 
-let client: Pool;
-
-export const pgClient = (): Pool => {
-  if (!client) {
-    client = new Pool({
-      host: process.env.DB_HOST,
-      port: parseInt(`${process.env.DB_PORT}`),
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-    });
+const prismaClient = () => {
+  if (!pool) {
+    pool = new PrismaClient();
   }
-  return client;
+
+  return pool;
 };
+
+const client = prismaClient();
+
+export default client;

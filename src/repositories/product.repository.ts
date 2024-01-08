@@ -1,44 +1,54 @@
-import { Pool } from "pg";
 import { Product } from "../entities/Product";
 import { IProductRepository } from "../interfaces/IProductRepository";
-import { pgClient } from "../applications/database";
+import prismaClient from "../applications/database";
 
 export class ProductRepository implements IProductRepository {
-  private client: Pool;
+  private client;
 
   constructor() {
-    this.client = pgClient();
+    this.client = prismaClient;
   }
 
   async create({ name, price, stock }: Product): Promise<Product> {
-    const product = await this.client.query(
-      `INSERT INTO products (name,price,stock) VALUES ($1,$2,$3) RETURNING *`,
-      [name, price, stock]
-    );
-    return product.rows[0];
+    const product = await this.client.products.create({
+      data: {
+        name,
+        price,
+        stock,
+      },
+    });
+    return product;
   }
 
   async findMany(limit: number, offset: number): Promise<Product[]> {
-    const products = await this.client.query(
-      `SELECT * FROM products OFFSET $1 LIMIT $2`,
-      [offset, limit]
-    );
-    return products.rows;
+    const products = await this.client.products.findMany({
+      skip: offset,
+      take: limit,
+    });
+    return products;
   }
 
   async findOne(id: number): Promise<Product> {
-    const product = await this.client.query(
-      `SELECT * FROM products WHERE id = $1 LIMIT 1`,
-      [id]
-    );
-    return product.rows[0];
+    const product = await this.client.products.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!product) throw new Error("product not found");
+    return product;
   }
 
   async update(id: number, stock: number): Promise<Product> {
-    const product = await this.client.query(
-      `UPDATE products SET stock=$1 WHERE id=$2 RETURNING *`,
-      [stock, id]
-    );
-    return product.rows[0];
+    const product = await this.client.products.update({
+      where: {
+        id,
+      },
+      data: {
+        stock,
+      },
+    });
+
+    return product;
   }
 }

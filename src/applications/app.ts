@@ -1,5 +1,8 @@
 import express, { Express } from "express";
 import routes from "../routes";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 let app: Express;
 
