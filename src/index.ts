@@ -1,13 +1,9 @@
-import express from "express";
-import routes from "./routes";
+import { getApp } from "./applications/app";
 
 const PORT = process.env.PORT || 3001;
 
-const app = express();
-
-app.use(express.json());
-app.use(routes);
+const app = getApp();
 
 app.listen(PORT, () => {
-  console.log("Listening to port" + PORT);
+  console.log("Listening to port " + PORT);
 });
