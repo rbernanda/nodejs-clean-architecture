@@ -30,4 +30,13 @@ describe("POST /api/products", () => {
     expect(res.body.price).toBe(mockProduct.price);
     expect(res.body.stock).toBe(mockProduct.stock);
   });
+
+  it("should reject on invalid input", async () => {
+    const res = await supertest(app).post("/api/products").send({});
+
+    expect(res.status).toBe(400);
+    expect(res.body.name).toBeUndefined();
+    expect(res.body.price).toBeUndefined();
+    expect(res.body.stock).toBeUndefined();
+  });
 });

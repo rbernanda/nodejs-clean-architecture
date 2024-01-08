@@ -1,6 +1,7 @@
 import { Product } from "../entities/Product";
 import { IProductRepository } from "../interfaces/IProductRepository";
 import prismaClient from "../applications/database";
+import ResponseError from "../utilities/response-error";
 
 export class ProductRepository implements IProductRepository {
   private client;
@@ -10,6 +11,10 @@ export class ProductRepository implements IProductRepository {
   }
 
   async create({ name, price, stock }: Product): Promise<Product> {
+    if (!name || !price || !stock) {
+      throw new ResponseError(400, "name price and stock are required");
+    }
+
     const product = await this.client.products.create({
       data: {
         name,
@@ -17,6 +22,7 @@ export class ProductRepository implements IProductRepository {
         stock,
       },
     });
+    console.log({ product });
     return product;
   }
 
